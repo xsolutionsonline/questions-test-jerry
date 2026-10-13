@@ -1,0 +1,85 @@
+openapi: 3.0.3
+info:
+  title: Client API
+  description: API-first contract for the Client service
+  version: 0.0.1
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: Client
+paths:
+  /api/clients:
+    get:
+      tags:
+        - Client
+      operationId: getClients
+      summary: Get all clients
+      responses:
+        "200":
+          description: List of clients
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ClientDto"
+  /api/client:
+    post:
+      tags:
+        - Client
+      operationId: saveClient
+      summary: Create a new client
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClientDto"
+      responses:
+        "200":
+          description: Result of the save operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceResponse"
+  /api/clients/{id}:
+    delete:
+      tags:
+        - Client
+      operationId: deleteClient
+      summary: Delete a client by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "204":
+          description: Client deleted
+        "404":
+          description: Client not found
+components:
+  schemas:
+    ClientDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        firstName:
+          type: string
+        lastName:
+          type: string
+        surname:
+          type: string
+        phone:
+          type: string
+    ServiceResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
