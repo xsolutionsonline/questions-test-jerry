@@ -2,10 +2,13 @@ package com.practice.clientapi.controller;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.practice.clientapi.generated.api.ClientApi;
@@ -19,13 +22,18 @@ public class ClientController implements ClientApi {
 	@Autowired
 	private IClientService clientService;
 
+
+	@Operation(summary = " listar los clientes ", description = "devuevlve todos los clientes registrados")
+	@ApiResponse(responseCode = "200", description ="Resultado de la operacion exitosa listando clientes")
 	@Override
     public ResponseEntity<List<ClientDto>> getClients() {
     	return ResponseEntity.ok(clientService.findAll());
     }
 
+	@Operation(summary = "crear un cliente", description = "guardan un cliente nuevo")
+	@ApiResponse(responseCode = "200", description ="Resultado de la operacion exitosa")
 	@Override
-    public ResponseEntity<ServiceResponse> saveClient(ClientDto client) {
+    public ResponseEntity<ServiceResponse> saveClient(@RequestBody ClientDto client) {
     	ServiceResponse serviceReponse = new ServiceResponse();
     	int result = clientService.save(client);
     	if (result == 1) {
@@ -37,6 +45,9 @@ public class ClientController implements ClientApi {
 
     }
 
+	@Operation(summary = "eliminar un cliente", description = "Elimina el cliente con el id indicado, Devuelve 404 si no existe")
+	@ApiResponse(responseCode = "204", description ="cliente eliminado")
+	@ApiResponse(responseCode = "404", description ="cliente no encontrado")
 	@Override
 	public ResponseEntity<Void> deleteClient(Integer id) {
 		return clientService.deleteById(id)
