@@ -47,6 +47,13 @@ El objetivo fue convertir el proyecto a un enfoque **API-first** y dejarlo corri
 - **Errores de sintaxis preexistentes en el código**: `ClientRepository.deleteById` tenía una línea sin `;` que impedía compilar, y el `INSERT`/`DELETE` tenían los bugs de SQL ya mencionados en la sección 1.2. Se detectaron al correr `mvnw clean compile`/`test` y se corrigieron directamente.
 - **Validación sin base de datos disponible**: el test de contexto (`TestApplicationTests`) fallaba porque no había un Postgres corriendo en `localhost:5432`. Se resolvió levantando un contenedor Postgres desechable (`docker run postgres:16-alpine`) solo para validar, confirmando que el error no era de código sino de entorno.
 
+## 3.1 Por qué no se llegó a empezar el front
+
+No se alcanzó a comenzar con el frontend (`my-app-exam`) por falta de tiempo.
+
+- **Causa**: el proyecto no compilaba con Maven por el `pom.xml` con dependencias mal declaradas (versiones faltantes o incompatibles con el parent `spring-boot-starter-parent:3.0.6`, ver sección 3), lo que impedía incluso correr `mvnw clean compile`. Resolver eso (identificar qué dependencias fallaban y fijar sus versiones correctas) consumió el tiempo disponible.
+- **Solución**: se corrigió el `pom.xml` fijando las versiones faltantes de las dependencias y quitando la versión incorrecta de `spring-boot-starter-data-jdbc`, dejando el backend compilando y corriendo; con eso resuelto no quedó tiempo para abordar el frontend.
+
 ## 4. Mejoras adicionales con más tiempo
 
 - **Seguridad**: no hay autenticación ni autorización — se podría agregar Spring Security (OAuth2/JWT) y declarar los esquemas de seguridad directamente en `clientapi.yaml` para que el generador OpenAPI los propague a la interfaz y a Swagger UI.
